@@ -25,14 +25,6 @@ export default function Home(){
                 image:'./images/unknown.jpg',
             },
         },
-        {
-            image:'./images/post.jpg',
-            user:{
-                displayname:'Displayname',
-                username:'Username',
-                image:'./images/unknown.jpg',
-            },
-        },
     ]
     return(
         <div className="container">
