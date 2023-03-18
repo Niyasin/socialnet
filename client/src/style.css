@@ -17,7 +17,7 @@ body {
   box-sizing: border-box;
 }
 
-.container{
+.loginContainer{
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -76,4 +76,8 @@ input::placeholder{
 }
 .button:hover{
   background: var(--pri);
+}
+
+.container{
+  
 }

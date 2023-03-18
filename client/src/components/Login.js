@@ -6,7 +6,7 @@ export default function Login(){
     const [password,setPassword]=useState('');
     const [password2,setPassword2]=useState('');
     return(
-        <div className="container">
+        <div className="loginContainer">
             <div className="main">
                 <h1>Discover,Connect<br/>Explore</h1>
                 <div className="form">
