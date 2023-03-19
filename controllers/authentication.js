@@ -61,20 +61,20 @@ module.exports.login=async (req,res)=>{
     }
 }
 
-module.exports.auth=async (req,res,next)=>{
+module.exports.auth=async(req,res,next)=>{
     let token=req.cookies.token;
     if(token){
-        await verify(token,appSecret,async (err,decoded)=>{
-            if(err){
-                res.send(JSON.stringify({error:true}))
-            }else{
-                req.user =await User.findOne({_id:decoded.id});
-                console.log(req.user);
-                next();
-            }
-        })
+        try{
+            await verify(token,appSecret,async (err,decoded)=>{
+                if(err){
+                    res.send(JSON.stringify({error:true}))
+                }else{
+                    req.user =await User.findOne({_id:decoded.id});
+                    next();
+                }
+            })
+        }catch(e){}
     }else{
         res.send(JSON.stringify({error:true}))
     }
-    next();
 }

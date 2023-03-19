@@ -9,6 +9,17 @@ export default function Profile({username,close,user}){
         image:[],
     });
     const [window,setWindow]=useState(null);
+    const addFriend=()=>{
+        let xhr=new XMLHttpRequest();
+        xhr.open('POST','/addFriend');
+            xhr.setRequestHeader('Content-Type','application/json');
+            xhr.send(JSON.stringify({username}));
+            xhr.onload=()=>{
+                    if(xhr.status==200){
+                        loadData();
+                    }
+                }
+    }
     const loadData=()=>{
         let xhr=new XMLHttpRequest();
             xhr.open('POST','getUserData');
@@ -16,7 +27,10 @@ export default function Profile({username,close,user}){
             xhr.send(JSON.stringify({username}));
             xhr.onload=()=>{
                     if(xhr.status==200){
-                        setData(JSON.parse(xhr.responseText));
+                        let res=JSON.parse(xhr.responseText)
+                        if(!res.error){
+                            setData(res);
+                        }
                     }
                 }
     }
@@ -51,7 +65,7 @@ export default function Profile({username,close,user}){
             <div className="side center">
                 <img src={data.image} className='profilePic' />
                 <h2>{data.username}</h2>
-                <div className="button wide">Add Friend</div>
+                <div className="button wide" onClick={addFriend}>Add Friend</div>
                 <div className="list">
                     {data.friends.length} Mutual Friend{data.friends.length>1?'s':''}
                     {
