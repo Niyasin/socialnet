@@ -21,5 +21,16 @@ cd client
 npm run build
 ```
 
+## Database
+this project user mongodb.make sure that mongodb is installed on th device.
+
+
 ## UI Design
 View design in [figma](https://www.figma.com/file/GU6wWJWd1VbZEfU9MGazFC/socialnetwork?node-id=0%3A1&t=AAJdOwdJATxJ35px-1)
+
+
+
+
+>## Note
+>posting, settings and change password fuctions are not compleatly build on this version please check later commits
+
