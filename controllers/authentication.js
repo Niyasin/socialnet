@@ -14,7 +14,7 @@ module.exports.signup=async (req,res)=>{
         displayname:req.body.username,
         email:null,
         dob:null,
-        image:'./public/unknown.jpg',
+        image:'./images/unknown.jpg',
         friends:[],
         posts:[],
     }

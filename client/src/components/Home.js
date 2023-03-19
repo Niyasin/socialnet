@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export default function Home({user}){
     const friends=[
@@ -29,7 +29,14 @@ export default function Home({user}){
         },
     ]
     const [searchResult,setSearchResult]=useState([]);
-    const [searchKey,setSearchKey]=useState(null);
+    const [searchKey,setSearchKey]=useState('');
+    const [data,setData]=useState({
+        username:'',
+        displayname:'',
+        friends:[],
+        posts:[],
+        image:[],
+    });
 
 
     const search=()=>{
@@ -48,21 +55,37 @@ export default function Home({user}){
             setSearchResult([]);
         }
     }
+
+    const loadData=()=>{
+        let xhr=new XMLHttpRequest();
+            xhr.open('POST','getUserData');
+            xhr.setRequestHeader('Content-Type','application/json');
+            xhr.send(JSON.stringify({username:user.username}));
+            xhr.onload=()=>{
+                    if(xhr.status==200){
+                        setData(JSON.parse(xhr.responseText));
+                    }
+                }
+    }
+    useEffect(()=>{
+        loadData();
+    },[]);
+
     return(
         <div className="container">
             <div className="nav">
                 <div className="user">
-                    <img src="./images/unknown.jpg"/>
-                    <span>Displayname</span>
+                    <img src={data.image}/>
+                    <span>{data.displayname}</span>
                 </div>
-                <div className="iconbtn">
+                <div className="iconbtn" onClick={loadData}>
                     <svg viewBox="0 0 52 52"><path d="M30 29h16.5c.8 0 1.5-.7 1.5-1.5v-3c0-.8-.7-1.5-1.5-1.5H30c-.6 0-1-.4-1-1V5.5c0-.8-.7-1.5-1.5-1.5h-3c-.8 0-1.5.7-1.5 1.5V22c0 .6-.4 1-1 1H5.5c-.8 0-1.5.7-1.5 1.5v3c0 .8.7 1.5 1.5 1.5H22c.6 0 1 .4 1 1v16.5c0 .8.7 1.5 1.5 1.5h3c.8 0 1.5-.7 1.5-1.5V30c0-.6.4-1 1-1z"/></svg>
                     New post
                 </div>
             </div>
             <div className="feed">
                 {
-                    feed.map((e,i)=>{
+                    data.posts.map((e,i)=>{
                         return(
                             <div className="post">
                                 {e.image?<img className='postImg' src={e.image}/>:<></>}
@@ -103,7 +126,7 @@ export default function Home({user}){
                 }
 
                     {
-                        friends.map((e,i)=>{
+                        data.friends.map((e,i)=>{
                             return(
                                 <div className="user" key={i}>
                                     <img src={e.image}/>
@@ -117,7 +140,7 @@ export default function Home({user}){
                     }
                     <span>Suggested For You</span>
                     {
-                        suggested.map((e,i)=>{
+                        data.friends.map((e,i)=>{
                             return(
                                 <div className="user" key={i}>
                                     <img src={e.image}/>

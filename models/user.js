@@ -17,7 +17,10 @@ const userSchema =new mongoose.Schema({
     image:{
         type:String,
     },
-    friends:[mongoose.Schema.Types.ObjectId],
+    friends:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User'
+    }],
     posts:[mongoose.Schema.Types.ObjectId],
 });
 
