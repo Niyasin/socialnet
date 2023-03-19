@@ -1,10 +1,33 @@
 import { useState } from "react"
 
-export default function Login(){
+export default function Login({setUser}){
     const [account,setAccount]=useState(false);
     const [username,setUsername]=useState('');
     const [password,setPassword]=useState('');
     const [password2,setPassword2]=useState('');
+
+
+    const signup=()=>{
+        if(username.length && password===password2){
+            let xhr=new XMLHttpRequest();
+            xhr.open('POST','/signup');
+            xhr.setRequestHeader('Content-Type','application/json');
+            let data=JSON.stringify({
+                username,
+                password,
+            });
+            xhr.send(data);
+            xhr.onload=()=>{
+                let res=JSON.parse(xhr.responseText);
+                if(!res.error){
+                    setUser(res.data);
+                }else{
+
+                }
+            }
+        }
+    }
+
     return(
         <div className="loginContainer">
             <div className="main">
@@ -22,7 +45,7 @@ export default function Login(){
                         <input placeholder='Password' type='password'  onChange={(e)=>{setPassword(e.target.value)}}/>
                         <input placeholder='Confirm Password' type='password' onChange={(e)=>{setPassword2(e.target.value)}}/>
                         <span className='link' onClick={()=>{setAccount(true)}} >Alredy Have An Account ?</span>
-                        <div className="button">Signup</div>
+                        <div className="button" onClick={signup}>Signup</div>
                     </>}
                 </div>
             </div>
