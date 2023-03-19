@@ -1,6 +1,6 @@
 const User =require('../models/user');
 const {scryptSync,randomBytes,timingSafeEqual} =require('crypto')
-const {sign} =require('jsonwebtoken');
+const {sign,verify} =require('jsonwebtoken');
 
 const appSecret='secret'
 
@@ -59,4 +59,22 @@ module.exports.login=async (req,res)=>{
     }catch(e){
         res.send(JSON.stringify({error:true}));
     }
+}
+
+module.exports.auth=async (req,res,next)=>{
+    let token=req.cookies.token;
+    if(token){
+        await verify(token,appSecret,async (err,decoded)=>{
+            if(err){
+                res.send(JSON.stringify({error:true}))
+            }else{
+                req.user =await User.findOne({_id:decoded.id});
+                console.log(req.user);
+                next();
+            }
+        })
+    }else{
+        res.send(JSON.stringify({error:true}))
+    }
+    next();
 }
