@@ -146,6 +146,10 @@ input::placeholder{
   grid-template-areas: 'n n' 'f s';
   grid-template-columns: 8fr 3fr;
   grid-template-rows: 1fr 12fr;
+  position: absolute;
+  top:0;
+  left: 0;
+  background: var(--bg);
 }
 
 .nav{

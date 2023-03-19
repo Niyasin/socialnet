@@ -1,34 +1,8 @@
 import { useEffect, useState } from "react"
-
+import Profile from "./Profile"
 export default function Home({user}){
-    const friends=[
-        {
-            displayname:'Displayname',
-            username:'Username',
-            image:'./images/unknown.jpg',
-        },
-    ]
-
-    const suggested=[
-        {
-            displayname:'Displayname',
-            username:'Username',
-            image:'./images/unknown.jpg',
-        },
-    ]
-
-    const feed=[
-        {
-            image:'./images/post.jpg',
-            text:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam corrupti repellendus maiores sequi voluptatibus, obcaecati praesentium quam est. Maiores perferendis magnam dignissimos consequuntur, odit inventore id corporis vel doloribus dolorem iusto labore assumenda quod beatae repellat iure quas magni. Accusamus quam aspernatur ipsa in fuga molestias recusandae dolorum quaerat consequatur!',
-            user:{
-                displayname:'Displayname',
-                username:'Username',
-                image:'./images/unknown.jpg',
-            },
-        },
-    ]
     const [searchResult,setSearchResult]=useState([]);
+    const [window,setWindow]=useState(null);
     const [searchKey,setSearchKey]=useState('');
     const [data,setData]=useState({
         username:'',
@@ -70,9 +44,9 @@ export default function Home({user}){
     useEffect(()=>{
         loadData();
     },[]);
-
-    return(
+    return(<>
         <div className="container">
+
             <div className="nav">
                 <div className="user">
                     <img src={data.image}/>
@@ -108,16 +82,9 @@ export default function Home({user}){
                         {
                             searchResult.map((e,i)=>{
                                 if(user.username!=e.username){
-
                                     return(
-                                        <div className="user" key={i}>
-                                        <img src={e.image}/>
-                                        <div>
-                                            <p className='lg'>{e.displayname}</p>
-                                            <p className='sm'>@{e.username}</p>
-                                            </div>
-                                    </div>
-                                )
+                                        <User data={e} key={i} setWindow={setWindow} user={user}/>
+                                    )
                             }
                             })
                         }
@@ -128,13 +95,7 @@ export default function Home({user}){
                     {
                         data.friends.map((e,i)=>{
                             return(
-                                <div className="user" key={i}>
-                                    <img src={e.image}/>
-                                    <div>
-                                        <p className='lg'>{e.displayname}</p>
-                                        <p className='sm'>@{e.username}</p>
-                                    </div>
-                                </div>
+                                <User data={e} key={i} setWindow={setWindow} user={user}/>
                             )
                         })
                     }
@@ -142,19 +103,27 @@ export default function Home({user}){
                     {
                         data.friends.map((e,i)=>{
                             return(
-                                <div className="user" key={i}>
-                                    <img src={e.image}/>
-                                    <div>
-                                        <p className='lg'>{e.displayname}</p>
-                                        <p className='sm'>@{e.username}</p>
-                                    </div>
-                                </div>
+                                <User data={e} key={i} setWindow={setWindow} user={user}/>
                             )
                         })
                     }
                 </div>
             </div>
         </div>
+        {window}
+        </>
     )
+}
+
+const User=({data,key,setWindow,user})=>{
+return(
+    <div className="user" key={key} onClick={()=>{setWindow(<Profile username={data.username} close={()=>{setWindow(null)}} user={user}/>)}}>
+        <img src={data.image}/>
+        <div>
+            <p className='lg'>{data.displayname}</p>
+            <p className='sm'>@{data.username}</p>
+        </div>
+    </div>
+)
 }
 

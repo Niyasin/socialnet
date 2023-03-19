@@ -1,43 +1,42 @@
-export default function Profile(){
-    const feed=[
-        {
-            image:'./images/post.jpg',
-            text:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam corrupti repellendus maiores sequi voluptatibus, obcaecati praesentium quam est. Maiores perferendis magnam dignissimos consequuntur, odit inventore id corporis vel doloribus dolorem iusto labore assumenda quod beatae repellat iure quas magni. Accusamus quam aspernatur ipsa in fuga molestias recusandae dolorum quaerat consequatur!',
-            user:{
-                displayname:'Displayname',
-                username:'Username',
-                image:'./images/unknown.jpg',
-            },
-        },
-    ]
-    const mutual=[
-        {
-            displayname:'Displayname',
-            username:'Username',
-            image:'./images/unknown.jpg',
-        },
-    ]
-    const friends=[
-        {
-            displayname:'Displayname',
-            username:'Username',
-            image:'./images/unknown.jpg',
-        },
-    ]
-    return(
+import { useContext, useEffect, useState } from "react";
+import {UserContext} from './Home'
+export default function Profile({username,close,user}){
+    const [data,setData]=useState({
+        username:'',
+        displayname:'',
+        friends:[],
+        posts:[],
+        image:[],
+    });
+    const [window,setWindow]=useState(null);
+    const loadData=()=>{
+        let xhr=new XMLHttpRequest();
+            xhr.open('POST','getUserData');
+            xhr.setRequestHeader('Content-Type','application/json');
+            xhr.send(JSON.stringify({username}));
+            xhr.onload=()=>{
+                    if(xhr.status==200){
+                        setData(JSON.parse(xhr.responseText));
+                    }
+                }
+    }
+    useEffect(()=>{
+        loadData();
+    },[])
+    return(<>
         <div className="container">
             <div className="nav">
                 <div className="user">
-                    <img src="./images/unknown.jpg"/>
-                    <span>Displayname</span>
+                    <img src={user.image}/>
+                    <span>{user.displayname}</span>
                 </div>
-                <div className="iconbtn">Back</div>
+                <div className="iconbtn" onClick={close}>Back</div>
             </div>
             <div className="feed">
             {
-                    feed.map((e,i)=>{
-                        return(
-                            <div className="post" key={i}>
+                data.posts.map((e,i)=>{
+                    return(
+                        <div className="post" key={i}>
                                 {e.image?<img className='postImg' src={e.image}/>:<></>}
                                 <div className="user" key={i}>
                                     <img src={e.image}/>
@@ -50,40 +49,43 @@ export default function Profile(){
                 }
             </div>
             <div className="side center">
-                <img src="./images/post.jpg" className='profilePic' />
-                <h2>Username</h2>
+                <img src={data.image} className='profilePic' />
+                <h2>{data.username}</h2>
                 <div className="button wide">Add Friend</div>
                 <div className="list">
-                    {mutual.length} Mutual Friend{mutual.length>1?'s':''}
+                    {data.friends.length} Mutual Friend{data.friends.length>1?'s':''}
                     {
-                        mutual.map((e,i)=>{
+                        data.friends.map((e,i)=>{
                             return(
-                                <div className="user" key={i}>
-                                    <img src={e.image}/>
-                                    <div>
-                                        <p className='lg'>{e.displayname}</p>
-                                        <p className='sm'>@{e.username}</p>
-                                    </div>
-                                </div>
+                                <User data={e} key={i} setWindow={setWindow} user={user}/>
                             )
                         })
                     }
                     Other Friends
                     {
-                        friends.map((e,i)=>{
+                        data.friends.map((e,i)=>{
                             return(
-                                <div className="user" key={i}>
-                                    <img src={e.image}/>
-                                    <div>
-                                        <p className='lg'>{e.displayname}</p>
-                                        <p className='sm'>@{e.username}</p>
-                                    </div>
-                                </div>
+                                <User data={e} key={i} setWindow={setWindow} user={user}/>
                             )
                         })
                     }
                 </div>
             </div>
         </div>
+    {window}
+    </>
     )
 }
+
+const User=({data,key,setWindow,user})=>{
+    return(
+        <div className="user" key={key} onClick={()=>{setWindow(<Profile username={data.username} close={()=>{setWindow(null)}} user={user}/>)}}>
+            <img src={data.image}/>
+            <div>
+                <p className='lg'>{data.displayname}</p>
+                <p className='sm'>@{data.username}</p>
+            </div>
+        </div>
+    )
+    }
+    
