@@ -9,7 +9,7 @@ function App() {
     {/* <Login/> */}
     {/* <Home/> */}
     {/* <Profile/> */}
-    <Settings/>
+    {/* <Settings/> */}
     </>
   );
 }
