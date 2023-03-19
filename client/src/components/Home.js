@@ -1,4 +1,6 @@
-export default function Home(){
+import { useState } from "react"
+
+export default function Home({user}){
     const friends=[
         {
             displayname:'Displayname',
@@ -26,6 +28,26 @@ export default function Home(){
             },
         },
     ]
+    const [searchResult,setSearchResult]=useState([]);
+    const [searchKey,setSearchKey]=useState(null);
+
+
+    const search=()=>{
+        if(searchKey && searchKey.length>3){
+            let xhr=new XMLHttpRequest();
+            xhr.open('GET',`/search?q=${searchKey}`);
+            xhr.send();
+            xhr.onload=()=>{
+                if(searchKey.length){
+                    if(xhr.status==200){
+                        setSearchResult(JSON.parse(xhr.responseText));
+                    }
+                }
+            }
+        }else{
+            setSearchResult([]);
+        }
+    }
     return(
         <div className="container">
             <div className="nav">
@@ -56,8 +78,30 @@ export default function Home(){
             </div>
             <div className="side">
                 <h2>Friends</h2>
-                <input className='inp2' placeholder='search'/>
+                <input className='inp2' placeholder='search' onChange={(e)=>{setSearchKey(e.target.value);search()}}/>
                 <div className="list">
+                {searchKey.length>3?<>
+                    <span>Search Result For {searchKey}</span>
+                        {
+                            searchResult.map((e,i)=>{
+                                if(user.username!=e.username){
+
+                                    return(
+                                        <div className="user" key={i}>
+                                        <img src={e.image}/>
+                                        <div>
+                                            <p className='lg'>{e.displayname}</p>
+                                            <p className='sm'>@{e.username}</p>
+                                            </div>
+                                    </div>
+                                )
+                            }
+                            })
+                        }
+                    <span>Your Friends</span>
+                    </>:<></>
+                }
+
                     {
                         friends.map((e,i)=>{
                             return(

@@ -8,7 +8,7 @@ function App() {
   const [user,setUser]=useState(null);
   return (<>
     {user?<>
-      <Home/>
+      <Home user={user}/>
     </>:
       <Login setUser={setUser}/>
     }
