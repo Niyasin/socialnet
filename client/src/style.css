@@ -53,6 +53,10 @@ h2{
   gap:30px;
   width: 50%;
 }
+.form.left{
+  align-self: flex-start;
+  margin-left: 5%;
+}
 input{
   background: none;
   border: none;
@@ -72,9 +76,34 @@ input::placeholder{
   padding: 0 2%;
   background: var(--qua);
 }
+.inputwrap{
+  display: flex;
+  flex-direction: column;
+}
+.inp3Wrap{
+
+}
+.inp3{
+  width: 100%;
+  display: flex;
+  gap:10px;
+  padding:1%;
+  background: var(--qua);
+}
+.inp3::before{
+  content: attr(data-name);
+}
+.inp3 input{
+  border: none;
+  width: 100%;
+}
 
 .link{
   cursor: pointer;
+}
+.btngroup{
+  display: flex;
+  gap: 20px;
 }
 .button{
   padding:4px 15px;
@@ -203,4 +232,35 @@ input::placeholder{
   width: 60%;
   aspect-ratio: 1/1;
   border-radius: 100%;
+}
+
+.profilePic.sm{
+  width: 300px;
+}
+
+
+.settings{
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-areas: 'n n' 'f s';
+  grid-template-columns: 8fr 6fr;
+  grid-template-rows: 1fr 12fr;
+}
+.prof{
+  width: 100%;
+  height: 45%;
+  padding:0 10%;
+  display: flex;
+  justify-content: flex-start;
+  gap: 10%;
+  border-bottom: 2px solid var(--qua);
+}
+.prof>div{
+  width: fit-content;
+}
+.icon{
+  width: 30px;
+  stroke: var(--sec);
+  cursor: pointer;
 }
