@@ -36,7 +36,27 @@ export default function Profile({username,close,user}){
     }
     useEffect(()=>{
         loadData();
-    },[])
+    },[]);
+    const [mutual,setMutual]=useState([]);
+    const [other,setOther]=useState([]);
+    useEffect(()=>{
+        let m=[];
+        let o=[];
+        data.friends.forEach(e=>{
+            let flag=true;
+            user.friends.forEach(f=>{
+                if(e._id==f){
+                    flag=false;
+                    m.push(e);
+                }
+            });
+            if(flag){
+                o.push(e);
+            }
+        });
+        setMutual(m);
+        setOther(o);
+    },[data])
     return(<>
         <div className="container">
             <div className="nav">
@@ -67,17 +87,17 @@ export default function Profile({username,close,user}){
                 <h2>{data.username}</h2>
                 <div className="button wide" onClick={addFriend}>Add Friend</div>
                 <div className="list">
-                    {data.friends.length} Mutual Friend{data.friends.length>1?'s':''}
+                    {mutual.length} Mutual Friend{mutual.length>1?'s':''}
                     {
-                        data.friends.map((e,i)=>{
+                        mutual.map((e,i)=>{
                             return(
                                 <User data={e} key={i} setWindow={setWindow} user={user}/>
                             )
                         })
                     }
-                    Other Friends
+                    {mutual.length>0?'Other Friends':''}
                     {
-                        data.friends.map((e,i)=>{
+                        other.map((e,i)=>{
                             return(
                                 <User data={e} key={i} setWindow={setWindow} user={user}/>
                             )
