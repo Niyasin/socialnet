@@ -28,6 +28,31 @@ export default function Login({setUser}){
         }
     }
 
+
+
+    const login=()=>{
+        console.log(username,password);
+        if(username.length && password){
+            let xhr=new XMLHttpRequest();
+            xhr.open('POST','/login');
+            xhr.setRequestHeader('Content-Type','application/json');
+            let data=JSON.stringify({
+                username,
+                password,
+            });
+            xhr.send(data);
+            xhr.onload=()=>{
+                let res=JSON.parse(xhr.responseText);
+                if(!res.error){
+                    setUser(res.data);
+                }else{
+
+                }
+            }
+        }
+    }
+
+
     return(
         <div className="loginContainer">
             <div className="main">
@@ -38,7 +63,7 @@ export default function Login({setUser}){
                         <input placeholder='Username' onChange={(e)=>{setUsername(e.target.value)}}/>
                         <input placeholder='Password' type='password'  onChange={(e)=>{setPassword(e.target.value)}}/>
                         <span className='link' onClick={()=>{setAccount(false)}}>Dont Have An Account ?</span>
-                        <div className="button">Login</div>
+                        <div className="button" onClick={login}>Login</div>
                     </>:<>
                         <h2>Signup</h2>
                         <input placeholder='Username'  onChange={(e)=>{setUsername(e.target.value)}}/>

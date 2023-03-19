@@ -1,5 +1,5 @@
 const User =require('../models/user');
-const {scryptSync,randomBytes} =require('crypto')
+const {scryptSync,randomBytes,timingSafeEqual} =require('crypto')
 const {sign} =require('jsonwebtoken');
 
 const appSecret='secret'
@@ -26,6 +26,36 @@ module.exports.signup=async (req,res)=>{
          doc.token=createToken(user._id);
          res.setHeader('Set-Cookie',`token=${doc.token}`);
         res.send(JSON.stringify({error:false,data:doc}));
+    }catch(e){
+        res.send(JSON.stringify({error:true}));
+    }
+}
+
+module.exports.login=async (req,res)=>{
+    try{
+        let user=await User.findOne({username:req.body.username});
+        if(user){
+            let [pw,salt]=user.password.split(':');
+            let hash=await scryptSync(req.body.password,salt,32);
+            let buff=Buffer.from(pw,'hex');
+            let auth = timingSafeEqual(buff,hash);
+            if(auth){
+                let token=createToken(user._id);
+                let doc ={
+                    username:user.username,
+                    displayname:user.displayname,
+                    email:user.email,
+                    dob:user.dob,
+                    image:user.image,
+                    friends:user.friends,
+                    token,
+                }
+                res.setHeader('Set-Cookie',`token=${doc.token}`);
+                res.send(JSON.stringify({error:false,data:doc}));
+            }else{
+                res.send(JSON.stringify({error:true}));
+            }
+        }
     }catch(e){
         res.send(JSON.stringify({error:true}));
     }
